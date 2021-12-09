@@ -122,19 +122,38 @@ int main() {
 
 
     float vertices[] = {    //In OpenGL, every range value is between -1 and 1
-    -0.5f, -0.5f, 0.0f, //Since it's a triangle, z values are 0
-     0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
+    //-0.5f, -0.5f, 0.0f,   //Since it's a triangle, z values are 0
+    // 0.5f, -0.5f, 0.0f,
+    // 0.0f,  0.5f, 0.0f,
+     // second triangle
+    // 0.5f, -0.5f, 0.0f,  // bottom right
+    //-0.5f, -0.5f, 0.0f,  // bottom left
+    //-0.5f,  0.5f, 0.0f   // top left
+    //We can delete the duplicate vertices and draw the square with 4 vertex
+
+     0.5f,  0.5f, 0.0f,  // top right
+     0.5f, -0.5f, 0.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f,  // bottom left
+    -0.5f,  0.5f, 0.0f   // top left 
     };
 
-    unsigned int VBO, VAO; //VBO: Vertex Buffer Object, VAO: Vertex Array Object
+    unsigned int indices[] = {  //We can draw triangles using these vertices
+    0, 1, 3,   // first triangle
+    1, 2, 3    // second triangle
+    };
+
+    unsigned int VBO, VAO, EBO; //VBO: Vertex Buffer Object, VAO: Vertex Array Object, EBO: Element Buffer Object
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
     
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO); //Copy our vertices array in a buffer for OpenGL to use
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); 
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);          //Takes vertices as parameter
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);    //Takes triangles as parameter
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -174,7 +193,8 @@ int main() {
                                                 //glClear: Wee pass in buffer bits to specify which buffer we would like to clear.
         glUseProgram(shaderProgram); //We activate the program
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);   //Then we can draw a triangle
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);    //Drawing a rectangle
+            glBindVertexArray(0);
         //check and call events and swap the buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
