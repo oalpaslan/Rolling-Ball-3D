@@ -2,6 +2,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Shader.h"
+
 using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -9,25 +11,6 @@ void processInput(GLFWwindow* window);
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-const char *vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n" 
-"layout (location = 1) in vec3 aColor;\n" 
-"out vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos, 1.0);\n"
-"   ourColor = aColor;\n"
-"}\0";
-
-
-const char *fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(ourColor,1.0f);\n"        //vec4(red, green, blue, alpha(opacity) 
-"}\n\0";
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -80,50 +63,8 @@ int main() {
 
     
     //We do have to tell GLFW we want to call size callback function on every window resize by registering it
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER); //We create the object "vertexShader", then we provide the type 
-                                                                  //in glCreateShader as the parameter
 
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);   //We attach the vertex shader using glShaderSource
-                                                                  //1st argument: Shader object will be attached
-                                                                  //2nd: How many strings we are passing as source code.
-                                                                  //3rd: Actual source code of the vertex
-    glCompileShader(vertexShader);
-    int  success;
-    char infoLog[512]; // For error messages
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success); //Check if compilation was successful
-    if (!success)   //Output error msg if there is a compile error
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    unsigned int fragmentShader;                                  //After the vertex shader, we initialize the fragment shader.
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);          //Like before
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    unsigned int shaderProgram;             //Creating a shader program for linking multiple shaders
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);    //We attach the shaders and then link them wth glLinkProgram
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success)   //Output error msg if there is a link error
-    {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::LINK_FAILED\n" << infoLog << std::endl;
-    }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-
+    Shader ourShader("./shaders/vertex.vert", "./shaders/fragment.frag");
 
     float vertices[] = {   
         // positions    |     // colors
@@ -164,12 +105,6 @@ int main() {
     glEnableVertexAttribArray(1);
 
 
-   
-    //glDeleteShader(vertexShader);   //Once we activated the program, we don't need shaders anymore,
-    //glDeleteShader(fragmentShader); //since we linked them in the program
-
-    glUseProgram(shaderProgram); //We activate the program
-
     while (!glfwWindowShouldClose(window))  //glfwWindowShouldClose checks if GLFW told to close.
     {
         //input
@@ -182,8 +117,9 @@ int main() {
                                                 //glClear: Wee pass in buffer bits to specify which buffer we would like to clear.
 
         
-        
-         
+        ourShader.use();
+
+        ourShader.setFloat("someUniform", 1.0f);
 
         
         glBindVertexArray(VAO);
