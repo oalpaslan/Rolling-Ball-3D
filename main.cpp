@@ -12,17 +12,21 @@ const unsigned int SCR_HEIGHT = 600;
 
 const char *vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n" 
+"layout (location = 1) in vec3 aColor;\n" 
+"out vec3 ourColor;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"   gl_Position = vec4(aPos, 1.0);\n"
+"   ourColor = aColor;\n"
 "}\0";
 
 
 const char *fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
+"in vec3 ourColor;\n"
 "void main()\n"
 "{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"        //vec4(red, green, blue, alpha(opacity) 
+"   FragColor = vec4(ourColor,1.0f);\n"        //vec4(red, green, blue, alpha(opacity) 
 "}\n\0";
 
 
@@ -121,41 +125,27 @@ int main() {
 
 
 
-    float vertices[] = {    //In OpenGL, every range value is between -1 and 1
-    //-0.5f, -0.5f, 0.0f,   //Since it's a triangle, z values are 0
-    // 0.5f, -0.5f, 0.0f,
-    // 0.0f,  0.5f, 0.0f,
-     // second triangle
-    // 0.5f, -0.5f, 0.0f,  // bottom right
-    //-0.5f, -0.5f, 0.0f,  // bottom left
-    //-0.5f,  0.5f, 0.0f   // top left
-    //We can delete the duplicate vertices and draw the square with 4 vertex
-
-     0.5f,  0.5f, 0.0f,  // top right
-     0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f   // top left 
+    float vertices[] = {   
+        // positions    |     // colors
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
     };
 
-    unsigned int indices[] = {  //We can draw triangles using these vertices
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
-    };
 
-    unsigned int VBO, VAO, EBO; //VBO: Vertex Buffer Object, VAO: Vertex Array Object, EBO: Element Buffer Object
+    unsigned int VBO, VAO; //VBO: Vertex Buffer Object, VAO: Vertex Array Object
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
     
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO); //Copy our vertices array in a buffer for OpenGL to use
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); 
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);          //Takes vertices as parameter
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);    //Takes triangles as parameter
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    //Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     //The first parameter specifies which vertex attribute we want to configure. 
@@ -169,17 +159,16 @@ int main() {
     //5th: Known as "stride". The space between consecutive vertex attributes.
         //Since the next set of position data is located exactly 3 times the size of a float away we specify that value as the stride.
     
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //Color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); //We can say that since we set the location to 1
+    glEnableVertexAttribArray(1);
 
-    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-    glBindVertexArray(0);
 
    
     //glDeleteShader(vertexShader);   //Once we activated the program, we don't need shaders anymore,
     //glDeleteShader(fragmentShader); //since we linked them in the program
 
-    
+    glUseProgram(shaderProgram); //We activate the program
 
     while (!glfwWindowShouldClose(window))  //glfwWindowShouldClose checks if GLFW told to close.
     {
@@ -191,10 +180,15 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);           //Otherwise we would still see the results from the previous frame
                                                 //glClearColor: The color to be filled with glClear
                                                 //glClear: Wee pass in buffer bits to specify which buffer we would like to clear.
-        glUseProgram(shaderProgram); //We activate the program
+
+        
+        
+         
+
+        
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);    //Drawing a rectangle
-            glBindVertexArray(0);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
         //check and call events and swap the buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
