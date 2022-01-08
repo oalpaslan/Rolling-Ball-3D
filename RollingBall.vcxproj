@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\assimp-5.0.1\assimp-5.0.1\include;C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\robtr\Desktop\Ders\CS405\glm-master\glm;C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\assimp-5.0.1\assimp-5.0.1\include;C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\robtr\Desktop\Ders\CS405\glm-master\glm;C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -92,12 +92,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\robtr\Desktop\Ders\CS405\glm-master\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\robtr\Desktop\Ders\CS405\glm-master\glm;C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\lib"C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\lib";C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,12 +122,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\robtr\Desktop\Ders\CS405\glm-master\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\robtr\Desktop\Ders\CS405\glm-master\glm;C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\lib"C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\lib";C:\Users\robtr\Desktop\Ders\CS405\Projects\Project 2 - 3D Game\Rolling Ball\RollingBall\Libraries\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,6 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
